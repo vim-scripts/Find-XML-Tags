@@ -1,0 +1,18 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=3588
+
+I was editing an HTML file written by several developers over the course of a
+few years. They contained tags like (yes, literally!)
+        <table cellpadding=0 cellspacing="0" border='0'>
+        <table cellspacing="0" cellpadding=0 border='0'>
+        <table cellspacing=0 cellpadding=0 border=0>
+
+They're all basically the same table definition, but the attributes are
+switched around and the attribute values are formatted differently each time.
+(Thank the multiple developers, each with their own style.) Running HTML Tidy
+wasn't an option because I didn't want to create a huge diff in version
+control that indicated a lot of changes where I didn't actually change
+anything. Thus, this plugin.
+
+The commands and functions defined in this script will match any XML/HTML
+element/tag with the specified attributes and values.
+
