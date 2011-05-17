@@ -1,14 +1,30 @@
 " Test: cellpadding=0 cellpadding="0" cellpadding='0'
 function! FindXmlTag#MakeAttributeSearchString( name, value )
-  let result = '\<' . a:name . '\_s*=\_s*\%('
+  let result = '\<' . a:name
 
-  let result .= '''' . a:value . ''''
-  let result .= '\|'
-  let result .= '"' . a:value . '"'
-  let result .= '\|'
-  let result .= a:value
+  " Only attach the value clause if the attribute HAS a value.
+  if ( a:value != g:FindXmlTag_noValue )
+    " If the default value is selected, replace with the default wildcard expression.
+    let value = a:value == g:FindXmlTag_anyValue ? '[^''"]*' : a:value
 
-  let result .= '\)'
+    if ( a:value == g:FindXmlTag_anyValue )
+      let result .= '\%('
+    endif
+
+    let result .= '\_s*=\_s*\%('
+
+    let result .= '''' . value . ''''
+    let result .= '\|'
+    let result .= '"' . value . '"'
+    let result .= '\|'
+    let result .= value
+
+    let result .= '\)'
+
+    if ( a:value == g:FindXmlTag_anyValue )
+      let result .= '\)\?'
+    endif
+  endif
 
   return result
 endfunction
@@ -54,7 +70,7 @@ function! FindXmlTag#MakeTagSearchString( exact, tag, attributes )
   endif
 
   let result .= a:exact == 1 ? '\_s*' : '[^<>]\{-}'
-  let result .= '/\?>'
+  let result .= '\/\?>'
 
   return result
 endfunction

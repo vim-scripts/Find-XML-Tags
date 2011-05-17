@@ -6,6 +6,7 @@ TABLE OF CONTENTS                                             *FindXmlTag_toc*
   2. Usage                                                  |FindXmlTag_Usage|
     2.1. Commands                                        |FindXmlTag_Commands|
     2.2. Functions                                      |FindXmlTag_Functions|
+    2.3. Options                                          |FindXmlTag_Options|
   3. Examples                                            |FindXmlTag_Examples|
   4. History                                              |FindXmlTag_History|
 
@@ -36,10 +37,13 @@ USAGE                                                       *FindXmlTag_Usage*
 For the usage examples, assume we have the same HTML table tags as defined in
 |FindXmlTag_Purpose|.
 
+  ----------------------------------------------------------------------------
   Commands                                               *FindXmlTag_Commands*
 
   Note that both the commands accept regular expressions instead of hard-code
-  string literals for all parameters.
+  string literals for all parameters. However, because of the way the final
+  regular expression is compiled, it is possible that, if you craft a
+  particularly clever regular expression, it may not work.
 
                                                              *Findxmltagexact*
   Command usage: >
@@ -70,6 +74,7 @@ For the usage examples, assume we have the same HTML table tags as defined in
   fixed. For example, the above example will match ALL of the table tags from
   before.
 
+  ----------------------------------------------------------------------------
   Functions                                             *FindXmlTag_Functions*
 
                                         *FindXmlTag#MakeAttributeSearchString*
@@ -96,13 +101,44 @@ For the usage examples, assume we have the same HTML table tags as defined in
   This is the function called by both |Findxmltagexact| and
   |Findxmltagflexible|.
 
+  ----------------------------------------------------------------------------
+  Options                                                 *FindXmlTag_Options*
+
+                                                         *g:FindXmlTag_anyValue*
+  If you don't care about the value of an attribute, as long as it has one,
+  specify this string as the value and the expression generator will craft a
+  regular expression that will match all values; for example, >
+        Findxmltagexact td border `
+<
+  will find all td tags that have a border attribute with any value, including
+  none. Specifically, it will match all of these: >
+        <td border=1>
+        <td border>
+        <td border="5">
+<
+  Defaults to one back-tick (`).
+
+                                                          *g:FindXmlTag_noValue*
+  Older HTML pages will sometimes provide standalone attributes (such as
+  "nowrap") with no value; use this as the "value" for such an attribute. For
+  example, >
+        Findxmltagexact td nowrap ``
+<
+  will match >
+        <td nowrap>
+<
+  but not >
+        <td nowrap="1">
+<
+  Defaults to two back-ticks (``).
+
 
 ==============================================================================
 EXAMPLES                                                 *FindXmlTag_Examples*
 
 - To match any div that has an id attribute, irrespective of value, but no
-  other attributes: >
-        Findxmltagexact div id [^"']*
+  other attributes (assuming |g:FindXmlTag_anyValue| is still the default): >
+        Findxmltagexact div id `
 <
   This will match any of >
         <div id=test>
@@ -121,6 +157,9 @@ EXAMPLES                                                 *FindXmlTag_Examples*
 
 ==============================================================================
 HISTORY                                                   *FindXmlTag_History*
+
+Version 1.5: Added options to easily add attributes with any value or no
+value.
 
 Version 1.0: Initial version.
 
