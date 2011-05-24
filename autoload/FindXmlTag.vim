@@ -29,6 +29,8 @@ function! FindXmlTag#MakeAttributeSearchString( name, value )
   return result
 endfunction
 
+let s:anyAttribute = '\_[^<>]\{-}'
+
 function! FindXmlTag#MakeTagSearchString( exact, tag, attributes )
   let result = '<' . a:tag
 
@@ -39,7 +41,7 @@ function! FindXmlTag#MakeTagSearchString( exact, tag, attributes )
     let result .= '\_s\+'
 
     if ( !a:exact )
-      let result .= '[^<>]\{-}'
+      let result .= s:anyAttribute
     endif
 
     let result .= '\%('
@@ -48,7 +50,7 @@ function! FindXmlTag#MakeTagSearchString( exact, tag, attributes )
 
     while ( i < len( a:attributes ) )
       let name  = a:attributes[ i ]
-      let value = a:attributes[ i + 1 ]
+      let value = get( a:attributes, i + 1, g:FindXmlTag_anyValue )
 
       if ( i > 0 )
         let result .= '\|'
@@ -69,7 +71,7 @@ function! FindXmlTag#MakeTagSearchString( exact, tag, attributes )
     let result .= '\{' . numAttributes . '}'
   endif
 
-  let result .= a:exact == 1 ? '\_s*' : '[^<>]\{-}'
+  let result .= a:exact == 1 ? '\_s*' : len( a:attributes ) == 0 ? '\%(\_s\+' . s:anyAttribute . '\)\?' : s:anyAttribute
   let result .= '\/\?>'
 
   return result

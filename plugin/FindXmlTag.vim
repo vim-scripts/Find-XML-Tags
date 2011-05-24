@@ -12,5 +12,5 @@ if ( !exists( "g:FindXmlTag_noValue" ) )
   let g:FindXmlTag_noValue = '``'
 endif
 
-com! -nargs=+ Findxmltagexact call FindXmlTag#FindXmlTag( 1, <f-args> )
-com! -nargs=+ Findxmltagflexible call FindXmlTag#FindXmlTag( 0, <f-args> )
+com! -nargs=+ FindXmlTagExact    call FindXmlTag#FindXmlTag( 1, <f-args> ) | if ( &hlsearch ) | set hlsearch | endif
+com! -nargs=+ FindXmlTagFlexible call FindXmlTag#FindXmlTag( 0, <f-args> ) | if ( &hlsearch ) | set hlsearch | endif
